@@ -1,5 +1,5 @@
 //su - hdfs
-hadoop fs -put /home/hadoop/hourly.csv /user/hadoop/khazret_dir/
+//hadoop fs -put /home/hadoop/hourly.csv /user/hadoop/khazret_dir/
 
 import org.apache.spark.sql.types.{DateType, IntegerType, TimestampType}
 import org.apache.hadoop.hbase.HBaseConfiguration
