@@ -19,7 +19,7 @@ spark
   .read
     .format("csv")
     .option("header", "true")
-    .load("hdsf://some/path/to/file.csv")
+    .load("hdsf://some/path/to/hourly.csv")
   .write
     .mode("overwrite")
     .jdbc(dbStr, tablename, props)
