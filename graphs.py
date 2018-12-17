@@ -54,19 +54,6 @@ d = 3
 e = 4
 LABELS = ["A", "B", "C", "D", "E"]
 
-
-def get_distance_from_to_old(a, b, g, debug):
-    if g.graph[a][b] > 0:
-        ab = g.graph[a][b]
-    else:
-        ab = g.min_path(a, b)[b]
-    if ab > 0:
-        if debug:
-            print(f"The distance of the route {LABELS[a]}-{LABELS[b]} is {ab}")
-        return ab
-    else:
-        return 0
-
 def get_distance_from_to(stops, g, debug, only_direct):
     if len(stops) > 1:
         sliding_window = zip(stops,stops[1:])
@@ -89,6 +76,7 @@ def get_distance_from_to(stops, g, debug, only_direct):
                 return 0
         return total_distance
 
+###### Driver code ########
 
 #1. The distance of the route A-B-C. AB + BC
 
