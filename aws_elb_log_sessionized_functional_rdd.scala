@@ -26,7 +26,8 @@ val logRDD: RDD[ElbLog] = sc.textFile(dataFilePath)
 }.cache()
 
 // create tuple of client ips and timestamps
-val pairRdd = logRDD.map(rec => (rec.clientPort.split(":")(0), rec.timestamp))
+// and format values to get rid of microseconds
+val pairRdd = logRDD.map(rec => (rec.clientPort.split(":")(0), rec.timestamp.split('.')(0)))
 
 // group by client ips and create a list of associated timestamps
 val groupedbykey = pairRdd.groupByKey()
