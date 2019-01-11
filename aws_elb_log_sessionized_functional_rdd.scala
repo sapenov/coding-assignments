@@ -32,6 +32,12 @@ val pairRdd = logRDD.map(rec => (rec.clientPort.split(":")(0), rec.timestamp.spl
 // group by client ips and create a list of associated timestamps
 val groupedbykey = pairRdd.groupByKey()
 
+/*
+perhaps it could be done with more optimal
+val timestampsAdded = pairRdd.reduceByKey(_+_)
+timestampsAdded.collect().foreach(println)
+*/
+
 // materialize it
 groupedbykey.collect().foreach(println)
 
