@@ -1,8 +1,7 @@
-# coding-assignments
-some coding assignments from companies
-Sessionize ELB log
 
-I can see three approaches to sessionize ELB logs file in Spark and Scala:
+How to sessionize ELB log file in Spark and Scala
+
+I can see three approaches to sessionize ELB logs file :
 
 1) Using purely functional operations on RDD
 2) Using relational operations on DataFrame (which is really a Dataset)
