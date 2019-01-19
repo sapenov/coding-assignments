@@ -1,2 +1,2 @@
 # coding-assignments
-some coding assignments from companies
+create simple package manager in 2 hours
