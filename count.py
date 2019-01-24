@@ -24,3 +24,19 @@ def word_count(sentence):
 
 sntc = "I would not worry too much about the performance difference between the two approaches as it is marginal. I would really only optimise this if it proved to be the bottleneck in your application which is unlikely."
 print(uniq_words(sntc))
+
+### 10. Count the number of times a substring appear in a string
+
+def count_combinations(s, subs):
+    subl = len(subs)
+    e = len(s) - subl + 1
+    comb = 0
+    for i in range(0, e):
+        if s[i:i+subl] == subs:
+            comb+=1
+    return comb
+
+print(count_combinations("dddddd", "ddd"))
+
+# simplest one, but does not count all combinations
+print("dddddd".count("ddd"))
