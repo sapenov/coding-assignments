@@ -24,3 +24,7 @@ def fnr2(s):
     return rty
 
 print(fnr2("aabccbdcbe"))
+
+print(fnr2([123,1231,544,66,43,123,22,6,8,9,4,86]))
+
+print(fnr2(['g','v','v','g','j','k']))
