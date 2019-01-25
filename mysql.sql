@@ -120,3 +120,12 @@ group by name
 having orders =12
 order by orders desc
 limit 10;
+
+/* 8. Percentage increase in revenue compared to promoted and non-promoted products. */
+
+SELECT 
+  p1.store_id, ROUND(((p2.gross - p1.gross)/p2.gross * 100),0) AS 'Growth, %'
+FROM 
+    (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE promotion_id = 0 group by store_id) AS p1,
+    (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE promotion_id > 0 group by store_id) AS p2
+order by 2 desc;
