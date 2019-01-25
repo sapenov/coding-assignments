@@ -129,3 +129,23 @@ FROM
     (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE promotion_id = 0 group by store_id) AS p1,
     (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE promotion_id > 0 group by store_id) AS p2
 order by 2 desc;
+
+/* orders whose total values are greater than 60,000 */
+
+SELECT 
+    orderNumber, 
+    customerNumber, 
+    status, 
+    shippedDate
+FROM
+    orders
+WHERE
+    orderNumber IN (
+        SELECT 
+            orderNumber
+        FROM
+            orderDetails
+        GROUP BY orderNumber
+        HAVING SUM(quantityOrdered * priceEach) > 60000
+       );
+
