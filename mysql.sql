@@ -34,3 +34,24 @@ SELECT
 FROM 
     (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE YEAR(transaction_date) = 2014 group by store_id) AS p1,
     (SELECT store_id, sum(store_sales) AS gross FROM sales WHERE YEAR(transaction_date) = 2015 group by store_id) AS p2;
+
+/* 3a. Get youngest customer who bought at least 1 product;  */
+
+select concat(c.first_name, c.last_name) as name,nc.birthdate as bd, sum(s.units_sold) as bought
+from sales as s
+join customers as c on s.customer_id = c.customer_id
+group by name, bd
+having bought > 0
+order by bd desc
+limit 1
+
+/* 3b. Get oldest customer who bought at least 1 product;  */
+
+select concat(c.first_name, c.last_name) as name,nc.birthdate as bd, sum(s.units_sold) as bought
+from sales as s
+join customers as c on s.customer_id = c.customer_id
+group by name, bd
+having bought > 0
+order by bd asc
+limit 1
+
