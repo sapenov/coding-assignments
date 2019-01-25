@@ -89,3 +89,19 @@ group by area
 having units >= 1
 order by units desc;
 
+/* number of unique products per customer */
+SELECT concat(c.first_name,' ', c.last_name) as name, 
+COUNT(DISTINCT product_id) as products_count 
+FROM customers as c
+INNER JOIN sales as s
+ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, name
+HAVING COUNT(DISTINCT product_id) between 1 and 2;
+
+SELECT concat(c.first_name,' ', c.last_name) as name, 
+COUNT(DISTINCT product_id) as products_count 
+FROM customers as c
+INNER JOIN sales as s
+ON c.customer_id = s.customer_id
+GROUP BY c.customer_id
+HAVING COUNT(DISTINCT product_id) = 2;
