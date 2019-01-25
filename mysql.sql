@@ -79,5 +79,13 @@ having bought > 0 and gender = 'F'
 order by bd asc
 limit 1
 
-
+/* 5. Get the areas from which we have the products sold */
+select  st.state as area,
+sum(s.units_sold) as units
+from sales as s
+join stores as st
+on s.store_id = st.store_id
+group by area
+having units >= 1
+order by units desc;
 
