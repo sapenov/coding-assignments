@@ -105,3 +105,18 @@ INNER JOIN sales as s
 ON c.customer_id = s.customer_id
 GROUP BY c.customer_id
 HAVING COUNT(DISTINCT product_id) = 2;
+
+/* 11.The names of people that have 2 or more orders. When was the earliest and latest order made ? cumulative sum */
+select 
+concat(c.first_name, ' ', c.last_name) as name,
+count(s.store_sales) as orders, 
+min(transaction_date) as earliest, 
+max(transaction_date) as latest,
+sum(s.store_sales) as cumulative_sum
+from sales as s
+join customers as c
+on s.customer_id = c.customer_id
+group by name 
+having orders =12
+order by orders desc
+limit 10;
