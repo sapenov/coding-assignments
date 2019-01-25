@@ -15,4 +15,15 @@ join products as p
 on p.product_id = s.product_id
 group by product_name
 having units >= 10 AND total > 20
-order by units desc
+order by units desc;
+
+/* Sales per brand which sold more than 10 units */
+select p.brand_name, 
+sum(s.units_sold) as units,
+sum(p.price * s.units_sold) as total
+from sales as s
+join products as p 
+on p.product_id = s.product_id
+group by brand_name
+having units >= 10 AND total > 20
+order by units desc;
