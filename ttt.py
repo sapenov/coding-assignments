@@ -147,9 +147,25 @@ class Board:
 g = Game("X", 3)
 g.play()
 
-b = Board(3)
-b.print_board()
-print("New move...")
-b.place_piece(0,0,'X')
-b.place_piece(0,0,'X')
-b.place_piece(0,0,'X')
+# testing
+# b = Board(3)
+# b.print_board()
+# print("New move...")
+
+# # No winner moves:
+# b.place_piece(0,0,'X')
+# b.place_piece(0,1,'X')
+# b.place_piece(1,2,'X')
+
+# # Winning moves:
+# # b.place_piece(0,0,'X')
+# # b.place_piece(1,0,'X')
+# # b.place_piece(2,0,'X')
+
+# # print(b._check_diagonals('X'))
+# # print(b._check_rows('X'))
+# # print(b._check_columns('X'))
+# print(b.check_win_condition('X'))
+# b.can_place_piece(1,1)
+# b.print_board()
+
