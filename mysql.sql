@@ -148,4 +148,13 @@ WHERE
         GROUP BY orderNumber
         HAVING SUM(quantityOrdered * priceEach) > 60000
        );
-
+/* all the projects that have the most employees. */
+SELECT project_id
+FROM Project 
+GROUP BY project_id 
+HAVING COUNT(employee_id)= ( 
+SELECT MAX(y.mycount) 
+FROM ( 
+SELECT project_id, COUNT(employee_id) as mycount 
+FROM Project 
+GROUP BY project_id) y);
