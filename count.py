@@ -13,8 +13,15 @@ def word_count(sentence):
         c = sentence.translate(str.maketrans('', '', string.punctuation)).lower().split(" ")
         wc = {x: c.count(x) for x in set(c)}
         return wc
- 
- def uniq_words(sentence):
+   
+def avg_word_length(sentence):
+    words = sentence.split()
+    retturn sum(map(len, words))/len(words)
+
+sentence = "Hi my name is Bob"
+print(avg_word_length(sentence))
+
+def uniq_words(sentence):
     if sentence == "":
         return {}
     else:
