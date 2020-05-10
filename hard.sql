@@ -1,13 +1,3 @@
-/*select e1.Name as 'Employee', e1.Salary
-from Employee e1
-where 3 >
-(
-    select count(distinct e2.Salary)
-    from Employee e2
-    where e2.Salary > e1.Salary
-)
-;*/
-
 /* 203 ms */
 SELECT
     d.Name AS 'Department', e1.Name AS 'Employee', e1.Salary
