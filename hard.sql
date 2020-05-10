@@ -90,3 +90,44 @@ join
 on department_salary.pay_month = company_salary.pay_month
 ;
 
+-- Human Traffic of Stadium
+/*
+X city built a new stadium, each day many people visit it and the stats are saved as these columns: id, visit_date, people.
+Please write a query to display the records which have 3 or more consecutive rows and the amount of people more than 100(inclusive).
+Each day only have one row record, and the dates are increasing with id increasing.
+*/
+-- solution 1 (148 ms)
+select distinct t1.*
+from stadium t1, stadium t2, stadium t3
+where 
+t1.people >= 100 
+and 
+t2.people >= 100 
+and 
+t3.people >= 100
+and
+(
+	(t1.id - t2.id = 1 and t1.id - t3.id = 2 and t2.id - t3.id =1)  -- t1, t2, t3
+    or
+    (t2.id - t1.id = 1 and t2.id - t3.id = 2 and t1.id - t3.id =1) -- t2, t1, t3
+    or
+    (t3.id - t2.id = 1 and t2.id - t1.id =1 and t3.id - t1.id = 2) -- t3, t2, t1
+)
+order by t1.id;
+
+-- Solution 2 (144 ms)
+SELECT DISTINCT S1.*
+FROM stadium S1
+JOIN stadium S2
+JOIN stadium S3
+ON 
+  ((S1.id = S2.id - 1 AND S1.id = S3.id -2)
+  OR (S3.id = S1.id - 1 AND S3.id = S2.id -2)
+  OR (S3.id = S2.id - 1 AND S3.id = S1.id -2))
+WHERE 
+  S1.people >= 100
+  AND S2.people >= 100
+  AND S3.people >= 100
+ORDER BY S1.id;*/
+
+
