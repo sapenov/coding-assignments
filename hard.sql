@@ -131,3 +131,37 @@ WHERE
 ORDER BY S1.id;*/
 
 
+-- Solution 3 203 ms
+
+SELECT 
+    id, visit_date, people
+FROM 
+    stadium
+WHERE 
+    3 <= (
+        SELECT COUNT(s.people) 
+        FROM stadium AS s
+        WHERE 
+            s.people >= 100
+            AND s.id >= stadium.id
+            AND s.id <= stadium.id+2
+    ) 
+    OR
+    3 <= (
+        SELECT COUNT(s.people) 
+        FROM stadium AS s
+        WHERE 
+            s.people >= 100
+            AND s.id >= stadium.id-1
+            AND s.id <= stadium.id+1
+    ) 
+    OR
+    3 <= (
+        SELECT COUNT(s.people) 
+        FROM stadium AS s
+        WHERE 
+            s.people >= 100
+            AND s.id >= stadium.id-2
+            AND s.id <= stadium.id
+    ) 
+
