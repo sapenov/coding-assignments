@@ -165,3 +165,29 @@ WHERE
             AND s.id <= stadium.id
     ) 
 
+-- Find Cumulative Salary of an Employee
+/*
+The Employee table holds the salary information in a year.
+
+Write a SQL to get the cumulative sum of an employee's salary over a period of 3 months but exclude the most recent month.
+
+The result should be displayed by 'Id' ascending, and then by 'Month' descending.
+*/
+
+select
+t.id,
+t.month,
+t.s
+from
+(select 
+row_number() over (
+    partition by id order by month asc
+    RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+) as rn,
+id,
+month,
+sum(salary) over (
+    partition by id order by month asc
+    RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+) as s
+from employee) t
