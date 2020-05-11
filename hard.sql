@@ -182,12 +182,10 @@ from
 (select 
 row_number() over (
     partition by id order by month asc
-    RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-) as rn,
+   ) as rn,
 id,
 month,
 sum(salary) over (
     partition by id order by month asc
-    RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-) as s
+   ) as s
 from employee) t
