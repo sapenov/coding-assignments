@@ -189,3 +189,30 @@ lead(month) over (partition by id order by month asc rows 2 preceding ) as lv
 from employee) t
 where t.lv is not null
 order by id asc, month desc
+
+
+-- Median Employee Salary
+/* The Employee table holds all employees. The employee table has three columns: Employee Id, Company Name, and Salary.
+Write a SQL query to find the median salary of each company. Bonus points if you can solve it without using any built-in SQL functions.
+*/
+
+select 
+t.id, 
+t.company, 
+t.salary
+from
+( select 
+    Employee.*,
+    count(*) over(partition by Company) as total_id,
+    row_number() over(partition by Employee.Company order by Employee.salary) as rank1
+    from Employee) t
+where
+(mod(t.total_id,2)=0
+and
+(t.rank1=t.total_id/2 or t.rank1=t.total_id/2+1)
+)
+or
+(mod(t.total_id,2)=1
+and
+t.rank1=(t.total_id+1)/2
+);
