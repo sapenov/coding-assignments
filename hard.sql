@@ -90,6 +90,32 @@ join
 on department_salary.pay_month = company_salary.pay_month
 ;
 
+--Department Highest Salary
+/*
+https://leetcode.com/problems/department-highest-salary/
+The Employee table holds all employees. Every employee has an Id, a salary, and there is also a column for the department Id.
+Write a SQL query to find employees who have the highest salary in each of the departments. 
+For the above tables, your SQL query should return the following rows (order of rows does not matter).
+*/
+SELECT
+    Department.name AS 'Department',
+    Employee.name AS 'Employee',
+    Salary
+FROM
+    Employee
+JOIN Department 
+ON Employee.DepartmentId = Department.Id
+WHERE
+    (Employee.DepartmentId , Salary) IN
+    (   SELECT
+            DepartmentId, MAX(Salary)
+        FROM
+            Employee
+        GROUP BY DepartmentId
+	)
+;
+
+
 -- Human Traffic of Stadium
 /*
 X city built a new stadium, each day many people visit it and the stats are saved as these columns: id, visit_date, people.
