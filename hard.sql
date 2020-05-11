@@ -174,18 +174,18 @@ Write a SQL to get the cumulative sum of an employee's salary over a period of 3
 The result should be displayed by 'Id' ascending, and then by 'Month' descending.
 */
 
+-- using window functions
+
 select
-t.id,
-t.month,
-t.s
+  t.id,
+  t.month,
+  t.s as salary
 from
 (select 
-row_number() over (
-    partition by id order by month asc
-   ) as rn,
 id,
 month,
-sum(salary) over (
-    partition by id order by month asc
-   ) as s
+sum(salary) over (partition by id order by month asc) as s,
+lead(month) over (partition by id order by month asc) as lv
 from employee) t
+where t.lv is not null
+order by id asc, month desc
