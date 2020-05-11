@@ -177,15 +177,15 @@ The result should be displayed by 'Id' ascending, and then by 'Month' descending
 -- using window functions
 
 select
-  t.id,
-  t.month,
-  t.s as salary
+t.id,
+t.month,
+t.s as salary
 from
 (select 
 id,
 month,
-sum(salary) over (partition by id order by month asc) as s,
-lead(month) over (partition by id order by month asc) as lv
+sum(salary) over (partition by id order by month asc rows 2 preceding ) as s,
+lead(month) over (partition by id order by month asc rows 2 preceding ) as lv
 from employee) t
 where t.lv is not null
 order by id asc, month desc
