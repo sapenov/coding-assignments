@@ -179,12 +179,12 @@ The result should be displayed by 'Id' ascending, and then by 'Month' descending
 select
 t.id,
 t.month,
-t.s as salary
+t.Salary
 from
 (select 
 id,
 month,
-sum(salary) over (partition by id order by month asc rows 2 preceding ) as s,
+sum(salary) over (partition by id order by month asc rows 2 preceding ) as Salary,
 lead(month) over (partition by id order by month asc rows 2 preceding ) as lv
 from employee) t
 where t.lv is not null
