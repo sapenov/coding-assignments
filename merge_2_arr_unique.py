@@ -60,6 +60,21 @@ msort(a)
 
 print(f"Sorted list with unique elements is {a}")
 
+def intersect(a, b):
+    output = []
+    i, j = 0, 0
+
+    while i < len(a) and j < len(b):
+        if a[i] == b[j]:
+            output.append(a[i])
+            i +=1
+            j +=1
+        elif a[i] < b[j]:
+            i+=1
+        else:
+            j+=1
+
+    return output
 
 """
 assuming that a and b are sorted already
