@@ -16,8 +16,6 @@ class Game:
             r, c = self.get_move(row_col)
             self.play_round(r, c)
 
-
-
     def play_round(self, row, col):
         if self.board.is_valid_move(row, col):
             self.board.mark_cell_opened(row, col, self.player)
