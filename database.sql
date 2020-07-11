@@ -141,3 +141,27 @@ FROM customers c
 INNER JOIN orders o 
 GROUP BY name 
 HAVING COUNT(order_id) < 3 OR SUM(amount) < 500
+
+/* Rolling Bank Transactions
+We're given a table bank transactions with three columns, user_id, a deposit or withdrawal value, and created_at time for each transaction.
+Write a query to get the total three day rolling average for deposits by day.
+*/
+SELECT 
+curr.dt, 
+avg(prev.total_deposits) 
+FROM ( 
+	SELECT 
+	created_at AS dt , 
+	SUM(transaction_value) AS total_deposits 
+	FROM bank_transactions AS bt 
+	WHERE transaction_value > 0 
+	GROUP BY 1 ) AS curr 
+INNER JOIN ( 
+	SELECT 
+	created_at AS dt , 
+	SUM(transaction_value) AS total_deposits 
+	FROM bank_transactions AS bt 
+	WHERE transaction_value > 0 
+	GROUP BY 1 ) AS prev 
+ON prev.dt BETWEEN DATE_ADD(curr.dt, INTERVAL -2 DAY) AND curr.dt 
+GROUP BY curr.dt;
