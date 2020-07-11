@@ -249,3 +249,170 @@ inner join scores b
 on a.student != b.student and a.id > b.id 
 order by 3 
 limit 1
+
+/* Swipe Precision
+There are two tables. One table is called `swipes` that holds a row for every Tinder swipe and contains a boolean column that determines if the swipe was a right or left swipe called `is_right_swipe`. The second is a table named `variants` that determines which user has which variant of an AB test.
+
+Write a SQL query to output the average number of right swipes for two different variants of a feed ranking algorithm by comparing users that have swiped the first 10, 50, and 100 swipes on their feed.
+
+Tip: Users have to have swiped at least 10 times to be included in the subset of users to analyze the mean number of right swipes.
+
+Example Input:
+
+`variants`
+
+id	experiment	variant	user_id
+1	feed_change	control	123
+2	feed_change	test	567
+3	feed_change	control	996
+`swipes`
+
+id	user_id	swiped_user_id	created_at	is_right_swipe
+1	123	893	2018-01-01	0
+2	123	825	2018-01-02	1
+3	567	946	2018-01-04	0
+4	123	823	2018-01-05	0
+5	567	952	2018-01-05	1
+6	567	234	2018-01-06	1
+7	996	333	2018-01-06	1
+8	996	563	2018-01-07	0
+Note: created_at doesn't show timestamps but assume it is a datetime column.
+
+Output:
+
+mean_right_swipes	variant	swipe_threshold	num_users
+5.3	control	10	9560
+5.6	test	10	9450
+20.1	control	50	2001
+22.0	test	50	2019
+33.0	control	100	590
+34.0	test	100	568
+		
+		*/
+//v1
+WITH table AS(
+	SELECT s.*, v.*,
+ ROW_NUMBER() OVER(PARTITON BY user_id ORDER BY created_at ASC) AS feed_number
+	FROM swipes s
+	JOIN variants v
+	USING user_id
+	WHERE experiment = ‘feed_change’
+), users_feeds AS(
+	SELECT user_id, MAX(feed_number) AS max_feeds
+	FROM table 
+	GROUP BY user_id
+	HAVING MAX(feed_number) > 10
+), users_flagged AS(
+	SELECT user_id,
+	CASE
+		WHEN max_feeds >= 100 THEN 100
+		ELSE IF max_feeds >= 50 AND max_feeds < 100 THEN 50
+		ELSE 10
+	END AS swipe_threshold
+) , users_with_buckets AS(
+	SELECT * 
+FROM table 
+JOIN 
+users_flagged 
+USING user_id
+WHERE feed_number <= swipe_threshold
+) SELECT swipe_threshold, 
+variant,  
+	SUM(is_swipe_right)::FLOAT/COUNT(DISTINCT user_id) AS mean_right_swipes_per_user,
+, COUNT(DISTINCT user_id)  AS num_users
+FROM users_with_buckets;
+
+//v2
+with swiped_count_per_user as (
+select user_id, count(distinct swiped_user_id) as swiped_user_count
+from swipes
+group by user_id
+having count(distinct swiped_user_id) >= 10),
+variants_filtered as (
+select v.*, 
+case when s.swiped_user_count >= 10 then 1 else 0 end as swipe_10,
+case when s.swiped_user_count >= 50 then 1 else 0 end as swipe_50,
+case when s.swiped_user_count >= 100 then 1 else 0 end as swipe_100
+from variants as v,
+join swiped_count_per_user as s
+on v.user_id = s.user_id
+),
+variants_10_swipes as (
+select variant, '10' as swipe_threshold, count(distinct swiped_user_id) as num_users,
+cast(sum(is_right_swipe)/count(distinct swiped_user_id) as float) as mean_right_swipes
+from variants_filtered
+where swipe_10 = 1
+group by 1, 2),
+variants_50_swipes as (
+select variant, '50' as swipe_threshold, count(distinct swiped_user_id) as num_users,
+cast(sum(is_right_swipe)/count(distinct swiped_user_id) as float) as mean_right_swipes
+from variants_filtered
+where swipe_50 = 1
+group by 1, 2),
+variants_100_swipes as (
+select variant, '100' as swipe_threshold, count(distinct swiped_user_id) as num_users,
+cast(sum(is_right_swipe)/count(distinct swiped_user_id) as float) as mean_right_swipes
+from variants_filtered
+where swipe_100 = 1
+group by 1, 2)
+select mean_right_swipes, variant, swipe_threshold, num_users
+from variants_10_swipes
+union
+variants_50_swipes
+union
+variants_100_swipes;
+		
+// v3
+with swiper_data as (select user_id, 
+variant,
+is_right_swipe,
+rank() over (partition by user_id order by created_at ASC) as rank
+from variants
+inner join swipes
+where experiment = "feed-change"
+)
+select variant, 
+sum(is_right_swipe)/count(distinct user_id) as mean_right_swipes,
+"10" as swipe_threshold,
+count(distinct user_id)
+from swipes_data 
+inner join on (
+select user_id 
+from swipe_data 
+where rank>10
+group by 1) as subset
+on swipes_data.user_id = subset.user_id
+where rank <=10
+group by 1
+
+UNION ALL
+
+select variant, 
+sum(is_right_swipe)/count(distinct user_id) as mean_right_swipes,
+"10" as swipe_threshold,
+count(distinct user_id)
+from swipes_data 
+inner join on (
+select user_id 
+from swipe_data 
+where rank>50
+group by 1) as subset
+on swipes_data.user_id = subset.user_id
+where rank <=50
+group by 1
+
+UNION ALL
+
+select variant, 
+sum(is_right_swipe)/count(distinct user_id) as mean_right_swipes,
+"10" as swipe_threshold,
+count(distinct user_id)
+from swipes_data 
+inner join on (
+select user_id 
+from swipe_data 
+where rank>100
+group by 1) as subset
+on swipes_data.user_id = subset.user_id
+where rank <=100
+group by 1
