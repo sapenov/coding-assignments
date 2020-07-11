@@ -1,5 +1,6 @@
 // Monthly Customer Report
 // Write a query to show the number of customer accounts created, number of orders placed, and total order amount per month.
+// variant 1
 WITH TABLE1 AS(
 SELECT
 		date_trunc(‘month’ , o. ord_date) AS month,  
@@ -15,3 +16,25 @@ GROUP BY date_trunc(‘month’ , o. ord_date)
 FROM table1 t1 
 LEFT JOIN table2 t2
 ON t1.month = t2.month
+
+// variant 2
+
+select 
+c.month, 
+num_customers, 
+num_orders, 
+order_amt 
+from (
+	select 
+	month(created_at) as month, 
+	count(id) as num_customers 
+	from customers group by month 
+) c 
+inner join ( 
+	select 
+	month(ord_date) as month, 
+	count(distinct ord_id) as num_orders, 
+	sum(amount) as order_amt 
+	from orders group by month 
+) o 
+on c.month = o.month
