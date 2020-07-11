@@ -77,3 +77,67 @@ AND
 GROUP BY m.id
 ) SELECT  manager_id, manager_name FROM t ORDER BY total_employees DESC LIMIT 5;
 
+/* Customer Orders
+Part 1) Write a query to identify customers who placed more than 3 orders each in 2016 and 2017.
+Part 2) Write a query to identify customers who placed less than 3 orders or ordered less than $500 worth of product.
+*/
+select name from (
+	select 
+	name,
+	year, 
+	dense_rank() over (partition by year,customer_id order by ord_id) as rnk 
+	from 
+	orders o 
+	inner join customers c 
+	on o.customer_id = c.id
+	where year(ord_date) in (2016, 2017)
+) a 
+where a.rnk > 3 
+group by name 
+having count(distinct year) > 1;
+
+// variant 2
+
+select foo.name 
+from (
+	select * 
+	from customers 
+	join orders on id=customer_id
+)foo 
+group by foo.name 
+having count(distinct ord_id)>3
+ 
+select foo.name 
+from (
+	select 
+	* 
+	from customers 
+	join orders on id=customer_id
+)foo 
+group by foo.name 
+having 
+count(distinct ord_id)<3 or sum(amount)<500
+
+// variant 3
+
+//1) 
+SELECT 
+DISTINCT name 
+FROM ( 
+	SELECT 
+	name, 
+	YEAR(ord_date) year, 
+	COUNT(order_id) 
+	FROM customers c 
+	INNER JOIN orders o 
+	WHERE YEAR(ord_date) IN (2016, 2017) 
+	GROUP BY name, YEAR(ord_date) 
+	HAVING COUNT(order_id) > 3 )
+
+// 2) 
+SELECT 
+name 
+FROM customers c 
+INNER JOIN orders o 
+GROUP BY name 
+HAVING COUNT(order_id) < 3 OR SUM(amount) < 500
