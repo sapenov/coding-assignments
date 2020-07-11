@@ -165,3 +165,23 @@ INNER JOIN (
 	GROUP BY 1 ) AS prev 
 ON prev.dt BETWEEN DATE_ADD(curr.dt, INTERVAL -2 DAY) AND curr.dt 
 GROUP BY curr.dt;
+
+// variant 2
+
+WITH valid_transactions AS (
+    SELECT DATE_TRUNC('day', created_at) AS dt
+        , SUM(transaction_value) AS total_deposits
+    FROM bank_transactions AS bt
+    WHERE transaction_value > 0
+    GROUP BY 1
+)
+
+SELECT vt1.dt
+    AVERAGE(vt2.total_deposits) AS rolling_three_day
+FROM valid_transactions AS vt1
+INNER JOIN valid_transactions AS vt2
+    -- set conditions for greater than three days 
+    ON vt1.dt > DATE_ADD('DAY', -3, vt2.dt)
+    -- set conditions for max date threshold
+        AND vt1.dt <= vt2.dt
+GROUP BY 1
