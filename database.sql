@@ -185,3 +185,67 @@ INNER JOIN valid_transactions AS vt2
     -- set conditions for max date threshold
         AND vt1.dt <= vt2.dt
 GROUP BY 1
+
+/* Closest SAT Scores
+Given a table of students and their SAT test scores, write a query to return the two students with the closest test scores with the score difference.
+Assume a random pick if there are multiple students with the same score difference.
+*/ 
+
+// v1
+
+select 
+s1.student as one_student, 
+s2.student as other_student, 
+abs(s1.score - s2.score) as score_diff 
+from scores s1 
+join scores s2 
+on s1.score > s2.score 
+order by score_diff 
+limit 1;
+
+// v2
+
+SELECT 
+stud1, 
+stud2, 
+sc_1, 
+sc_2, 
+diff 
+FROM ( 
+	SELECT 
+	s1.score as sc_1, 
+	s2.score as sc_2, 
+	s1.student as stud1, 
+	s2.student as stud2, 
+	abs(s1.score - s2.score) as diff 
+	FROM scores s1 
+	CROSS JOIN scores s2 
+	WHERE s1.id != s2.id 
+	) 
+ORDER BY diff 
+LIMIT 1;
+
+// v3
+
+SELECT 
+	a.student AS one_student, 
+	b.student AS other_student, 
+	MIN(ABS(a.score-b.score)) AS score_diff 
+FROM 
+	student a, 
+	student b 
+WHERE a.id <> b.id 
+GROUP BY a.student,b.student 
+ORDER BY score_diff 
+LIMIT 1;
+	
+// v4
+select 
+	a.student as student, 
+	b.student as other_student, 
+	abs(a.score - b.score) as score_diff 
+from scores a 
+inner join scores b 
+on a.student != b.student and a.id > b.id 
+order by 3 
+limit 1
