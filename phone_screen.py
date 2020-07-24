@@ -1,18 +1,24 @@
 # Libraries Included:
 # Numpy, Scipy, Scikit, Pandas
 
-# I’m going to present a challenge in 3 parts, each part will get more difficult than the last. Getting through all 3 parts is actually pretty rare, so don’t worry if we don’t finish. 
+""" 
+I’m going to present a challenge in 3 parts, each part will get more difficult than the last. 
+Getting through all 3 parts is actually pretty rare, so don’t worry if we don’t finish. 
 
-# At lark we have users who engage with our application every day. But sometimes they miss a day here or there. The goal here is to build a set of features representing the number of consecutive days of user-engagement. We’ll concentrate on the “cold-start” problem first, where we need to account for the user’s entire history. 
+At lark we have users who engage with our application every day. 
+But sometimes they miss a day here or there. The goal here is to build a set of features representing the number of consecutive days of user-engagement. 
+We’ll concentrate on the “cold-start” problem first, where we need to account for the user’s entire history. 
 
+Part 1
+To start off, we just want to know the maximum number of consecutive days a user has ever been active.
 
-# Part 1
-# To start off, we just want to know the maximum number of consecutive days a user has ever been active.
+To make this easier, we’ll say that we have a set of boolean list of days representing all of time for each user. 
+Every True means the user was active that day, and every False means the user was not active that day. For brevity I’ll use ‘1’ for true, and ‘0’ for false. 
+E.g. [1,0,1,0,1,1,1,1,0,1] etc. Assume that the length of this vector is arbitrary. 
 
-# To make this easier, we’ll say that we have a set of boolean list of days representing all of time for each user. Every True means the user was active that day, and every False means the user was not active that day. For brevity I’ll use ‘1’ for true, and ‘0’ for false. E.g. [1,0,1,0,1,1,1,1,0,1] etc. Assume that the length of this vector is arbitrary. 
-
-# Write a function that takes a list of boolean values, and will calculate the longest number of consecutive days the user has been active. 
-# (e.g. maxConsecutiveDays(days: List[Boolean]): Int) 
+Write a function that takes a list of boolean values, and will calculate the longest number of consecutive days the user has been active. 
+(e.g. maxConsecutiveDays(days: List[Boolean]): Int) 
+"""
 
 
 from typing import List
