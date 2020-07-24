@@ -42,9 +42,12 @@ def max_consecutive_days_v2(days: List[bool]) -> int:
             temp_max +=1
         else:
             max_list.append(temp_max+1)
-            temp_max = 0            
+            temp_max = 0   
             
-    return max(max_list) or temp_max   
+        if len(max_list) == 0 and temp_max > 0:
+            max_list.append(temp_max+1)            
+            
+    return max(max_list)   
     
 print(max_consecutive_days_v2([1,1,1,0,0,0,1,1])) 
 print(max_consecutive_days_v2([1,1,1,0,0,0,1,1])) 
